@@ -1,0 +1,25 @@
+{
+    "name": "Razonable",
+    "version": "1.0.0",
+    "description": "IndexedDB with a reasonable interface.",
+    "main": "src/razonable.ts",
+    "license" : "None",
+    "scripts": {
+        "build": "tsc",
+        "watch": "tsc --watch",
+        "lint": "prettier --parser typescript --single-quote --trailing-comma es5 --tab-width 4 --write "
+    },
+    "dependencies": {
+    },
+    "devDependencies": {
+        "babel-core": "^6.24.1",
+        "prettier": "prettier/prettier#b2a092bd17621995533ccc19d2951ed366eef943",
+        "ts-loader": "^2.0.3",
+        "typescript": "~2.2.1",
+        "typescript-eslint-parser": "^2.1.0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/graham/razonable.git"
+    }    
+}

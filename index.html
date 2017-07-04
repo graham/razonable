@@ -1,0 +1,24 @@
+<html>
+    <head>
+        <script src='dist/razonable.js'> </script>
+    </head>
+    <body>
+        Hello World
+    </body>
+
+    <script>
+     var log = function(all) { console.log(JSON.stringify(all)); };
+     var d = new Database('test');
+
+     d.ready.then(function() {
+         return d.forEach(function(item) {
+             if (item.value % 100 == 0 && item.step % 400 == 0) {
+                 console.log(item);
+             }
+         }, d.cursorWithIndex('updated', 'next'));
+     }).then(function() {
+         console.log("Done");
+     });
+
+    </script>
+</html>
