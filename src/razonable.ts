@@ -383,6 +383,3 @@ class Cursor {
     }
 }
 
-export {
-    Database
-}
