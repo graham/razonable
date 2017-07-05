@@ -13,14 +13,17 @@ Primarily:
 Lets break those down,
 
 1. Prioritize responsiveness
-   When it comes to pure performance, LokiDB is great. However, while fast, it's difficult to be performant for a User Interface if you have many records. Razonable prioritizes the ability to not block your UI. Razonable does this by using promises. This results in the total query time being higher, but never blocking your UI for very long (iteration size is determined by the developer).
+
+   When it comes to pure performance, LokiDB is great. However, while fast, it's difficult to be performant for a User Interface if you have a large number of records. Razonable prioritizes the ability to not block your UI. Razonable does this by using promises. This results in the total query time being higher, but never blocking your UI for very long (iteration size is determined by the developer).
 
    Additionally, a developer shouldn't have to wait for the entire query to finish before getting any results, Razonable prioritizes your ability to get results quicky.
 
 2. IndexedDB has really good indexes
-   Creating indexes is easy in indexeddb (surprising), there is no reason to recreate this or get in the way, so Razonable prioritizes your ability to use the native indexes.
+
+   Creating indexes is easy in indexeddb (surprising), there is no reason to recreate this or get in the way, so Razonable prioritizes your ability to use the native indexes. This means you can leverage the increasing speed of IndexedDB over time.
 
 3. Don't do too much
+
    Provide a clear api, be fast, be responsive, get out of the way.
 
 ----
@@ -49,10 +52,26 @@ Some examples:
 
 ### Update multiple items at once
 
-```
+```javascript
+
      var d = new Database('test');
 
      d.ready.then(function() {
+         var elements = {
+           'firstKey': {
+             'value': 200,
+             'name': "Bob",
+           },
+           'secondKey': {
+             'value': 5000,
+             'name': "Katie",
+           }
+         };
+
+         d.multiSetItems(elements).then(function() {
+           console.log('Done');
+         });
+
      });
 ```
 
