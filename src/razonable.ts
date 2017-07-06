@@ -221,8 +221,8 @@ class Database {
         return new Cursor(this.db);
     }
 
-    cursorWithIndex(indexName: string, direction?: string): Cursor {
-        return new Cursor(this.db, indexName, direction);
+    cursorWithIndex(indexName: string, direction?: string, initValue?: any): Cursor {
+        return new Cursor(this.db, indexName, direction, initValue);
     }
 
     clear(): Promise<any> {
@@ -279,6 +279,14 @@ class Database {
             iterator(thecursor);
         });
     }
+
+    recentUpdates(): Cursor {
+        return new Cursor(this.db, 'updated', 'prev', (new Date().getTime()));
+    }
+
+    newUpdates(): Cursor {
+        return new Cursor(this.db, 'updated', 'next', (new Date().getTime()));
+    }
 }
 
 
@@ -286,15 +294,15 @@ class Cursor {
     db: IDBDatabase;
     table: string;
     index: string | null;
-    lastKeyValue: string | null;
+    lastKeyValue: any | null;
     direction: string;
     hasMore: boolean;
 
-    constructor(db: IDBDatabase, index?: string, direction?: string) {
+    constructor(db: IDBDatabase, index?: string, direction?: string, initValue?: any) {
         this.db = db;
         this.table = "keys";
         this.index = index || null;
-        this.lastKeyValue = null;
+        this.lastKeyValue = initValue || null;
         this.direction = direction || "next";
         this.hasMore = true;
     }
@@ -334,7 +342,12 @@ class Cursor {
         if (this.lastKeyValue === null) {
             request = target.openCursor(undefined, this.direction);
         } else {
-            const keyRange = IDBKeyRange.lowerBound(this.lastKeyValue, true);
+            let keyRange: IDBKeyRange;
+            if (this.direction == 'next' || this.direction == 'nextUnique') {
+                keyRange = IDBKeyRange.lowerBound(this.lastKeyValue, true);
+            } else {
+                keyRange = IDBKeyRange.upperBound(this.lastKeyValue, true);
+            }
             request = target.openCursor(keyRange, this.direction);
         }
 
