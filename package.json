@@ -1,5 +1,5 @@
 {
-    "name": "Razonable",
+    "name": "razonable",
     "version": "1.0.0",
     "description": "IndexedDB with a reasonable interface.",
     "main": "src/razonable.ts",
