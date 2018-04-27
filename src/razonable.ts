@@ -3,6 +3,7 @@ function errorHandler(event: any) {
 }
 
 const DEFAULT_ITEM_PER_ITERATION = 2500;
+type TSDirection = "next" | "nextunique" | "prev" | "prevunique" | undefined;
 
 class Database {
     db: IDBDatabase;
@@ -221,7 +222,7 @@ class Database {
         return new Cursor(this.db);
     }
 
-    cursorWithIndex(indexName: string, direction?: string, initValue?: any): Cursor {
+    cursorWithIndex(indexName: string, direction?: TSDirection, initValue?: any): Cursor {
         return new Cursor(this.db, indexName, direction, initValue);
     }
 
@@ -295,10 +296,10 @@ class Cursor {
     table: string;
     index: string | null;
     lastKeyValue: any | null;
-    direction: string;
+    direction: TSDirection;
     hasMore: boolean;
 
-    constructor(db: IDBDatabase, index?: string, direction?: string, initValue?: any) {
+    constructor(db: IDBDatabase, index?: string, direction?: TSDirection, initValue?: any) {
         this.db = db;
         this.table = "keys";
         this.index = index || null;
@@ -343,7 +344,8 @@ class Cursor {
             request = target.openCursor(undefined, this.direction);
         } else {
             let keyRange: IDBKeyRange;
-            if (this.direction == 'next' || this.direction == 'nextUnique') {
+            // "nextunique" | "prev" | "prevunique" | undefined
+            if (this.direction == 'nextunique') {
                 keyRange = IDBKeyRange.lowerBound(this.lastKeyValue, true);
             } else {
                 keyRange = IDBKeyRange.upperBound(this.lastKeyValue, true);
@@ -396,3 +398,12 @@ class Cursor {
     }
 }
 
+function getDatabase():Database {
+    if (window['database'] == null) {
+        var d = new Database('db');
+        window['database'] = d;
+    }
+    return window['database'];
+}
+
+export {Database, getDatabase};
